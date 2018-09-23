@@ -1,0 +1,7 @@
+[submodule "google_benchmark"]
+	path = external/benchmark
+	url = http://github.com/google/benchmark
+
+[submodule "tsimd"]
+	path = external/tsimd
+	url = http://github.com/ospray/tsimd
