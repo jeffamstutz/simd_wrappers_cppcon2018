@@ -29,7 +29,9 @@
 
 namespace scalar {
 
-  inline int mandel(const float c_re, const float c_im, const int count)
+  inline int mandel(const float c_re,
+                    const float c_im,
+                    const int count)
   {
     float z_re = c_re, z_im = c_im;
     int i = 0;
@@ -76,7 +78,9 @@ namespace scalar {
 namespace openmp {
 
   #pragma omp declare simd
-  inline int mandel(const float c_re, const float c_im, const int count)
+  inline int mandel(const float c_re,
+                    const float c_im,
+                    const int count)
   {
     float z_re = c_re, z_im = c_im;
     int i = 0;
