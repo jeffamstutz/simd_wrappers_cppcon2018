@@ -34,8 +34,9 @@ namespace scalar {
   void saxpy_trig(float a, int n, float x[], float y[], float out[])
   {
     for (int i = 0; i < n; ++i) {
-      float result =
-        std::tan(a * std::sin(x[i]) + std::cos(y[i]));
+      const float xi = x[i];
+      const float yi = y[i];
+      float result = std::tan(a * std::sin(xi) + std::cos(yi));
 
 #if EXTRA_TANGENT_ITERATIONS > 0
       // optionally inject extra expensive compute
@@ -58,8 +59,9 @@ namespace openmp {
   {
     #pragma omp for simd
     for (int i = 0; i < n; ++i) {
-      float result =
-        std::tan(a * std::sin(x[i]) + std::cos(y[i]));
+      const float xi = x[i];
+      const float yi = y[i];
+      float result = std::tan(a * std::sin(xi) + std::cos(yi));
 
 #if EXTRA_TANGENT_ITERATIONS > 0
       // optionally inject extra expensive compute
@@ -81,8 +83,9 @@ namespace tsimd {
   void saxpy_trig(float a, int n, float x[], float y[], float out[])
   {
     for (int i = 0; i < n; i += vfloat::static_size) {
-      vfloat result =
-        tsimd::tan(a * tsimd::sin(load<vfloat>(&x[i])) + tsimd::cos(load<vfloat>(&y[i])));
+      const vfloat xi = load<vfloat>(&x[i]);
+      const vfloat yi = load<vfloat>(&y[i]);
+      vfloat result = tsimd::tan(a * tsimd::sin(xi) + tsimd::cos(yi));
 
 #if EXTRA_TANGENT_ITERATIONS > 0
       // optionally inject extra expensive compute
@@ -90,8 +93,8 @@ namespace tsimd {
         result = tsimd::tan(result);
 #endif
 
-      const vboolf write_result = result > 1.f;
-      if (tsimd::any(write_result))
+      const vboolf write_result = result > 1.f & ((n + lane_index<vint>()) > n);
+      if (any(write_result))
         store(result, &out[i], write_result);
     }
   }

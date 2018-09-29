@@ -165,12 +165,9 @@ namespace tsimd {
     const float dx = (x1 - x0) / width;
     const float dy = (y1 - y0) / height;
 
-    vint laneIndex(0);
-    std::iota(laneIndex.begin(), laneIndex.end(), 0);
-
     for (int j = 0; j < height; j++) {
       for (int i = 0; i < width; i += vfloat::static_size) {
-        const vfloat x(x0 + (i + laneIndex) * dx);
+        const vfloat x(x0 + (i + lane_index<vint>()) * dx);
         const vfloat y(y0 + j * dy);
 
         const auto active = x < width;

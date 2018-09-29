@@ -32,7 +32,9 @@ namespace scalar {
   void saxpy(float a, int n, float x[], float y[], float out[])
   {
     for (int i = 0; i < n; ++i) {
-      const float result = a * x[i] + y[i];
+      const float xi = x[i];
+      const float yi = y[i];
+      const float result = a * xi + yi;
       out[i] = result;
     }
   }
@@ -47,7 +49,9 @@ namespace openmp {
   {
     #pragma omp for simd
     for (int i = 0; i < n; ++i) {
-      const float result = a * x[i] + y[i];
+      const float xi = x[i];
+      const float yi = y[i];
+      const float result = a * xi + yi;
       out[i] = result;
     }
   }
@@ -61,7 +65,9 @@ namespace tsimd {
   void saxpy(float a, int n, float x[], float y[], float out[])
   {
     for (int i = 0; i < n; i += vfloat::static_size) {
-      const vfloat result = a * load<vfloat>(&x[i]) + load<vfloat>(&y[i]);
+      const vfloat xi = load<vfloat>(&x[i]);
+      const vfloat yi = load<vfloat>(&y[i]);
+      const vfloat result = a * xi + yi;
       store(result, &out[i]);
     }
   }
